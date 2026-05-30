@@ -4,7 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 
 const appLayoutStyles = cn(
-  'flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900',
+  'flex flex-col min-h-screen',
 );
 
 const outletStyles = cn('flex-1 w-full max-w-6xl mx-auto p-4');

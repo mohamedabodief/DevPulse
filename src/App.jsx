@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false, 
+      refetchOnWindowFocus: false,
       retry: false,
     },
   },
@@ -47,7 +47,9 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+
       <ReactQueryDevtools initialIsOpen={false} />
+
       <Toaster
         position="top-center"
         gutter={12}
@@ -55,12 +57,18 @@ function App() {
         toastOptions={{
           success: { duration: 3000 },
           error: { duration: 5000 },
+
+          className: `
+            bg-gray-100 text-gray-900 border border-gray-200
+            dark:bg-gray-900 dark:text-gray-100 dark:border-gray-800
+            transition-colors duration-300
+          `,
+
           style: {
             fontSize: '16px',
             maxWidth: '500px',
             padding: '16px 24px',
-            backgroundColor: '#f3f4f6',
-            color: '#111111',
+            borderRadius: '12px',
           },
         }}
       />
