@@ -4,7 +4,7 @@ import Button from './Button';
 const heroContainerStyles = cn('max-w-3xl space-y-8');
 
 const titleStyles = cn(
-  'text-4xl font-extrabold tracking-tight sm:text-6xl',
+  'text-4xl font-extrabold tracking-tight sm:text-6xl whitespace-nowrap',
   'text-gray-900 dark:text-gray-100',
 );
 

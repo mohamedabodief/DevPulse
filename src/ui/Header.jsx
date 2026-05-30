@@ -5,13 +5,14 @@ import Logo from './Logo';
 import Button from './Button';
 
 const headerStyles = cn(
-  'flex h-16 w-full items-center justify-between p-4',
-  'bg-gray-300 dark:bg-gray-800',
-  'text-gray-800 dark:text-gray-200',
-  'transition-colors duration-300',
+  'flex flex-col gap-3 p-4 w-full items-center justify-center',
+
+  'md:flex-row md:h-16 md:gap-0 md:justify-between',
 );
 
-const controlsContainerStyles = cn('flex items-center gap-4');
+const controlsContainerStyles = cn(
+  'flex sm:flex-row items-center gap-3 w-full md:w-auto justify-center',
+);
 
 function Header() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
@@ -27,6 +28,7 @@ function Header() {
           onClick={toggleDarkMode}
           text={isDarkMode ? '☀️ Light' : '🌙 Dark'}
           aria-label="Toggle Dark Mode"
+          className=" whitespace-nowrap shadow-sm"
         />
       </div>
     </header>
