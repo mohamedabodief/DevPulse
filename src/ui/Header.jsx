@@ -28,7 +28,7 @@ function Header() {
           onClick={toggleDarkMode}
           text={isDarkMode ? '☀️ Light' : '🌙 Dark'}
           aria-label="Toggle Dark Mode"
-          className=" whitespace-nowrap shadow-sm"
+          className="whitespace-nowrap px-4 py-2 text-sm shadow-sm"
         />
       </div>
     </header>

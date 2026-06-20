@@ -5,48 +5,51 @@ import { cn } from '../../utils/cn';
 import Button from '../../ui/Button';
 import Spinner from '../../ui/Spinner';
 import RepoList from './RepoList';
-
+import { RepoGridSkeleton } from '../../ui/RepoSkeleton';
 
 const mainLayoutStyles = cn(
   'max-w-4xl mx-auto my-8 p-6 w-full',
-  'flex flex-col gap-6',
+  'flex flex-col gap-6'
 );
 
 const backButtonContainerStyles = cn(
-  'self-start flex items-center justify-start',
+  'self-start flex items-center justify-start'
 );
 
 const topSectionStyles = cn(
-  'flex flex-col md:flex-row gap-8 items-center md:items-start w-full',
+  'flex flex-col md:flex-row gap-8 items-center md:items-start w-full'
 );
 
 const avatarStyles = cn(
   'w-40 h-40 rounded-full border-4 border-gray-200 dark:border-gray-700 shadow-md',
-  'object-cover transition-transform duration-300 hover:scale-105',
+  'object-cover transition-transform duration-300 hover:scale-105'
 );
 
 const infoContainerStyles = cn(
-  'flex-1 space-y-4 text-center md:text-left w-full',
+  'flex-1 space-y-4 text-center md:text-left w-full'
 );
 
 const nameStyles = cn('text-3xl font-bold text-gray-900 dark:text-gray-100');
 const usernameStyles = cn(
-  'text-xl text-blue-600 dark:text-blue-400 font-medium',
+  'text-xl text-blue-600 dark:text-blue-400 font-medium'
 );
 const bioStyles = cn(
-  'text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl',
+  'text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl'
 );
 
 const statsGridStyles = cn(
-  'grid grid-cols-3 mx-auto gap-4 max-w-md pt-4 border-t border-b border-gray-100 dark:border-gray-800 py-4',
+  'grid grid-cols-3 mx-auto gap-4 max-w-md pt-4 border-t border-b border-gray-100 dark:border-gray-800 py-4'
 );
 
 const statCardStyles = cn('text-center');
 const statNumberStyles = cn(
-  'text-xl font-bold text-gray-800 dark:text-gray-200',
+  'text-xl font-bold text-gray-800 dark:text-gray-200'
 );
 const statLabelStyles = cn('text-xs text-gray-400 uppercase tracking-wider');
 
+const fullScreenErrorStyles = cn(
+  'fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-950 p-6 text-center animate-fade-in'
+);
 
 function UserDetail() {
   const { username } = useParams();
@@ -57,13 +60,14 @@ function UserDetail() {
     isLoading: isLoadingUser,
     error: userError,
   } = useUser(username);
+
   const {
     repos,
     isLoading: isLoadingRepos,
     error: reposError,
   } = useRepos(username);
 
-  if (isLoadingUser || isLoadingRepos) {
+  if (isLoadingUser) {
     return (
       <div className="flex min-h-[400px] flex-1 items-center justify-center">
         <Spinner />
@@ -73,15 +77,33 @@ function UserDetail() {
 
   if (userError || reposError) {
     return (
-      <div className="flex min-h-[400px] flex-1 flex-col items-center justify-center space-y-4">
-        <p className="text-lg font-medium text-red-500">
-          {userError?.message || reposError?.message || 'Something went wrong.'}
+      <div className={fullScreenErrorStyles}>
+        <div className="text-6xl mb-4 animate-bounce">🌐</div>
+        
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          Connection Error
+        </h2>
+        
+        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6 leading-relaxed">
+          {userError?.message?.includes('Network Error') || reposError?.message?.includes('Network Error')
+            ? 'يبدو أنك غير متصل بالإنترنت، يرجى التحقق من الشبكة وإعادة المحاولة.'
+            : 'عذراً، السيرفر لا يستجيب حالياً أو أن المستخدم غير موجود بالمرة.'}
         </p>
-        <Button
-          text="Go Back"
-          variant="secondary"
-          onClick={() => navigate(-1)}
-        />
+
+        <div className="flex gap-3">
+          <Button
+            text="🔄 Try Again"
+            variant="primary"
+            className="px-5 py-2 text-sm font-medium shadow-md"
+            onClick={() => window.location.reload()}
+          />
+          <Button
+            text="⬅️ Go Back"
+            variant="secondary"
+            className="px-5 py-2 text-sm font-medium"
+            onClick={() => navigate(-1)}
+          />
+        </div>
       </div>
     );
   }
@@ -101,6 +123,7 @@ function UserDetail() {
 
   return (
     <main className={mainLayoutStyles}>
+      {/* زر العودة */}
       <div className={backButtonContainerStyles}>
         <Button
           text="&larr; Back"
@@ -110,6 +133,7 @@ function UserDetail() {
         />
       </div>
 
+      {/* كارت تفاصيل المطور */}
       <div className={topSectionStyles}>
         <img
           src={avatar_url}
@@ -147,18 +171,23 @@ function UserDetail() {
               href={html_url}
               target="_blank"
               rel="noreferrer"
+              className="inline-block w-full md:w-auto"
             >
               <Button
                 text="View GitHub Profile"
                 variant="primary"
-                className="mx-auto px-6 py-2.5"
+                className="w-full md:w-auto px-6 py-2.5"
               />
             </a>
           </div>
         </div>
       </div>
 
-      <RepoList repos={repos} />
+      {isLoadingRepos ? (
+        <RepoGridSkeleton />
+      ) : (
+        <RepoList repos={repos} />
+      )}
     </main>
   );
 }
